@@ -60,9 +60,10 @@ def start():
     board_width = data.get('width')
     board_height = data.get('height')
 
-    # we get our Id in the post request that is sent here
 
-    head_url = '%s://%s/static/head.png' % (
+    head_url = './therock.png' % (
+    # we get our Id in the post request that is sent here
+        ec3090ba48fbf87c1014f881676d2e0366c75ec0
         bottle.request.urlparts.scheme,
         bottle.request.urlparts.netloc
     )
