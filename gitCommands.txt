@@ -22,6 +22,8 @@ Updating "your" branch with the master branch:
                              
 Pushing to your local branch: git push -u origin <branchName>
 
+You should always rebase your branch before merging your branch with the master branch
+
 To merge with the master:
   1. Switch over to the master branch
   2. git merge <branchName>
