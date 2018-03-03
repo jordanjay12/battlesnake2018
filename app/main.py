@@ -202,12 +202,47 @@ def move():
     start = (xCoord, yCoord)
     goal = findFood(foodList, (xCoord,yCoord))
     came_from, cost_so_far = bs_search(graph, start, goal)
+    print("The value of head is:", start)
+    print("The value of goal is:", goal)
     print("The value of came_from is: ")
     print(came_from)
     print()
     print("The value of cost_so_far is: ")
     print(cost_so_far)
 
+
+    print("Printing out goal")
+    print(goal)
+    print("Printing out what was returned from the key")
+    print(came_from[goal])
+    destination = goal
+    previousMove = None
+    while start != destination:
+        previousMove = destination
+        destination = came_from[destination]
+
+    print("Our next move should be:", previousMove)
+
+    left = xCoord - 1
+    right = xCoord + 1
+    up = yCoord -1 # since the top is 0
+    down = yCoord + 1
+
+    nextMoveX = previousMove[0]
+    nextMoveY = previousMove[1]
+
+    if xCoord - nextMoveX < 0:
+        direction = "right"
+    if xCoord - nextMoveX > 0:
+        direction = "left"
+    # if both of these cases fail, then we need to move in the up down direction
+
+    if yCoord - nextMoveY < 0:
+        direction = "down"
+    if yCoord - nextMoveY > 0:
+        direction = "up"
+
+    '''
     direction = None
 
     # Check to see what we should be doing based on our health level
@@ -338,7 +373,7 @@ def move():
                 direction = 'up'
             else:
                 direction = "down"    
-
+    '''
 
 
     # Directions must be one of the following strings
