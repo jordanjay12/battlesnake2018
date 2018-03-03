@@ -10,3 +10,25 @@ All of the different branches that are available: git branch --all
 Switching to another branch: git checkout <branchName>
 
 Pushing to your local branch: git push -u origin <branchName>
+
+
+
+To fetch from master and combine with local repo
+
+//switch to master
+git checkout master
+
+//fetches changes from repo
+git fetch -p
+
+//pull from master
+git pull
+
+//switch to branch
+git checkout steph
+
+//rebases master with master
+git rebase master
+
+
+
