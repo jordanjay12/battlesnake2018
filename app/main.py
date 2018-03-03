@@ -61,9 +61,7 @@ def start():
     board_height = data.get('height')
 
 
-    head_url = './therock.png' % (
-    # we get our Id in the post request that is sent here
-        ec3090ba48fbf87c1014f881676d2e0366c75ec0
+    head_url = '%s://%s/static/head.png' % (
         bottle.request.urlparts.scheme,
         bottle.request.urlparts.netloc
     )
