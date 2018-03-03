@@ -156,7 +156,7 @@ def start():
     board_height = data.get('height')
 
 
-    head_url = '%s://%s/static/head.png' % (
+    head_url = '%s://%s/static/rock.png' % (
         bottle.request.urlparts.scheme,
         bottle.request.urlparts.netloc
     )
@@ -165,7 +165,7 @@ def start():
     boardHeight = data['height']
 
     return {
-        'color': '#00FF00',
+        'color': '#F4426E',
         'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
         'head_url': head_url
     }
