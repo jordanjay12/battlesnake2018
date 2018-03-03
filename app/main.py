@@ -171,6 +171,11 @@ def start():
     }
 
 
+def next_pos(start, came_from, goal):
+
+    return (0,0)
+
+
 @bottle.post('/move')
 def move():
     global boardWidth
