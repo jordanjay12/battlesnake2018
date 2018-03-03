@@ -4,8 +4,11 @@ Committing:
   2. git commit -m "<message>"
   3. git push
 
+BEFORE YOU PUSH/MERGE/REBASE, MAKE SURE YOU RUN git fetch -p and git pull on MASTER
 
 All of the different branches that are available: git branch --all
+
+Creating a new branch: git checkout -b "new branch name"
 
 Switching to another branch: git checkout <branchName>
                              ex. git checkout master
@@ -14,7 +17,7 @@ Updating "your" branch with the master branch:
                              git fetch -p (fetches all the changes from the remote repo)
                              git pull
 
-                             switch back to your branch
+                             switch back to your branch (git checkout branchName)
                              git rebase master - rebases everything that was on master
                              
 Pushing to your local branch: git push -u origin <branchName>
