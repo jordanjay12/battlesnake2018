@@ -94,7 +94,7 @@ def move():
     print data
 
     # mySnakeId = "409e5891-9d0a-4bc6-9b66-fb1b2d562762"
-    mySnakeId = "b412f432-45b1-4bb2-88ca-8a2626e2add3"
+    mySnakeId = "cb29746a-b35b-4197-9485-312af16e54ef"
     foodList = []
     allFood = data['food']['data']
     for food in allFood:
