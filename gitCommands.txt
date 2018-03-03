@@ -1,0 +1,12 @@
+Pulling: git pull
+Committing:
+  1. git add .
+  2. git commit -m "<message>"
+  3. git push
+
+
+All of the different branches that are available: git branch --all
+
+Switching to another branch: git checkout <branchName>
+
+Pushing to your local branch: git push -u origin <branchName>
