@@ -40,3 +40,7 @@ git push
 
 
 
+To add your account to command line
+
+git config credential.helper store
+
