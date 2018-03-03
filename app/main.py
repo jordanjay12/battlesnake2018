@@ -91,16 +91,17 @@ def move():
     # TODO: Do things with data
     # Made some more changes to the python file
     # print "Printing out the contents of data"
-    print data
-
+    #print data
+    snakes = data['snakes']['data']
+    #print str(snakes[0]['id'])
     # mySnakeId = "409e5891-9d0a-4bc6-9b66-fb1b2d562762"
-    mySnakeId = "cb29746a-b35b-4197-9485-312af16e54ef"
+    mySnakeId = snakes[0]['id']
     foodList = []
     allFood = data['food']['data']
     for food in allFood:
         foodList.append((food['x'], food['y']))
 
-    snakes = data['snakes']['data']
+   
 
     ourSnake = None;
     dangerZone = []
