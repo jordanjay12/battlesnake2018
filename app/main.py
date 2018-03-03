@@ -231,7 +231,7 @@ def move():
     #print direction
     return {
         'move': direction,
-        'taunt': 'battlesnake-python!'
+        'taunt': 'Grind hard, shine hard'
     }
 
 
