@@ -7,6 +7,15 @@ boardHeight = None
 snakeLength = 0
 snakeHealth = 0
 
+def findTail(ourCoordinates):
+    # return the location of our tail (x, y)
+    xCoord = int(ourCoordinates[len(ourCoordinates) -1]['x'])
+    yCoord = int(ourCoordinates[len(ourCoordinates) -1]['y'])
+    print("The coordinates of our tail")
+    print((xCoord, yCoord))
+    return (xCoord, yCoord)
+
+
 
 def findFood(foodList, head):
     # find the food item that is closest to the head
@@ -48,6 +57,8 @@ def start():
     board_width = data.get('width')
     board_height = data.get('height')
 
+    # we get our Id in the post request that is sent here
+
     head_url = '%s://%s/static/head.png' % (
         bottle.request.urlparts.scheme,
         bottle.request.urlparts.netloc
@@ -78,9 +89,10 @@ def move():
     # TODO: Do things with data
     # Made some more changes to the python file
     # print "Printing out the contents of data"
-    # print data
+    print data
 
-    mySnakeId = "409e5891-9d0a-4bc6-9b66-fb1b2d562762"
+    # mySnakeId = "409e5891-9d0a-4bc6-9b66-fb1b2d562762"
+    mySnakeId = "f24ce7a9-56e4-4cef-adb7-4fd65d66ecd9"
     foodList = []
     allFood = data['food']['data']
     for food in allFood:
@@ -112,74 +124,137 @@ def move():
     xCoord = int(ourCoordinates[0]['x'])
     yCoord = int(ourCoordinates[0]['y'])
 
-    closestFood = findFood(foodList, (xCoord,yCoord))
-    foodX = closestFood[0]
-    foodY = closestFood[1]
 
-    left = xCoord - 1
-    right = xCoord + 1
-    up = yCoord -1 # since the top is 0
-    down = yCoord + 1
-    move = None;
     direction = None
-    xMove = xCoord - foodX
-    yMove = yCoord - foodY
 
-    print(dangerZone)
+    # Check to see what we should be doing based on our health level
+    # Remember that our snakes grow out of our tail
+    print("Our Snake Health is: " + str(snakeHealth))
+    if snakeHealth > 50:
+        # I need to do more testing on this to see if it will work
+        print("Should be trying to find our tail")
+        snake = findTail(ourCoordinates)
+        tailX = snake[0]
+        tailY = snake[1]
 
-    testCoord = (1,1)
-    testList = [(1,2), (1,3), (1,1)]
-    # if testCoord not in testList:
-    # else:
-    #     print("testCoord is found in testList")
+        # I can probably modularize this into some other function
+        left = xCoord - 1
+        right = xCoord + 1
+        up = yCoord -1 # since the top is 0
+        down = yCoord + 1
 
-    print("The board width is: " + str(boardWidth))
-    print("The board height is " + str(boardHeight))
+        xMove = xCoord - tailX
+        yMove = yCoord - tailY
 
-    if xMove < 0:
-        # then the head is to the left of the food
-        move = (right, yCoord)
-        if move not in dangerZone and right < boardWidth:
-            print("Moving Right towards food")
-            direction = "right"
-        elif move in dangerZone:
-            print("Moving right into a danger zone")
-    if direction == None and xMove > 0:
-        # then the head is to the right of the food
-        move = (left, yCoord)
-        if move not in dangerZone and left >=0:
-            print("Moving Left towards food")
-            direction = 'left'
-        elif move in dangerZone:
-            print("Moving left into a danger zone")
-    if direction == None and yMove > 0:
-        # then the head is below the food
-        move = (xCoord, up)
-        if move not in dangerZone and up >= 0:
-            print("Moving Up towards food")
-            direction = 'up'
-        elif move in dangerZone:
-            print("Moving up into a danger zone")
-    if direction == None and yMove < boardHeight:
-        move = (xCoord, down)
-        print("At the start of the else case")
-        if move not in dangerZone and down < boardHeight:
-            print("Moving Down towards food")
-            direction = 'down'
-        elif move in dangerZone:
-            print("Moving down into a danger zone")
+        if xMove < 0:
+            # then the head is to the left of the food
+            move = (right, yCoord)
+            if move not in dangerZone and right < boardWidth:
+                print("Moving Right towards food")
+                direction = "right"
+            elif move in dangerZone:
+                print("Moving right into a danger zone")
+        if direction == None and xMove > 0:
+            # then the head is to the right of the food
+            move = (left, yCoord)
+            if move not in dangerZone and left >=0:
+                print("Moving Left towards food")
+                direction = 'left'
+            elif move in dangerZone:
+                print("Moving left into a danger zone")
+        if direction == None and yMove > 0:
+            # then the head is below the food
+            move = (xCoord, up)
+            if move not in dangerZone and up >= 0:
+                print("Moving Up towards food")
+                direction = 'up'
+            elif move in dangerZone:
+                print("Moving up into a danger zone")
+        if direction == None and yMove < boardHeight:
+            move = (xCoord, down)
+            print("At the start of the else case")
+            if move not in dangerZone and down < boardHeight:
+                print("Moving Down towards food")
+                direction = 'down'
+            elif move in dangerZone:
+                print("Moving down into a danger zone")
 
 
-    if direction == None:
-        print("Print direction is None, finding another safe move")
-        if (left,yCoord) not in dangerZone and left >=0:
-            direction = 'left'
-        elif (right,yCoord) not in dangerZone and right < boardWidth:
-            direction = 'right'
-        elif (xCoord,up) not in dangerZone and up >= 0:
-            direction = 'up'
-        else:
-            direction = "down"    
+        if direction == None:
+            print("Print direction is None, finding another safe move")
+            if (left,yCoord) not in dangerZone and left >=0:
+                direction = 'left'
+            elif (right,yCoord) not in dangerZone and right < boardWidth:
+                direction = 'right'
+            elif (xCoord,up) not in dangerZone and up >= 0:
+                direction = 'up'
+            else:
+                direction = "down"
+
+    else:
+
+        closestFood = findFood(foodList, (xCoord,yCoord))
+        foodX = closestFood[0]
+        foodY = closestFood[1]
+
+        left = xCoord - 1
+        right = xCoord + 1
+        up = yCoord -1 # since the top is 0
+        down = yCoord + 1
+        move = None;
+        #direction = None
+        xMove = xCoord - foodX
+        yMove = yCoord - foodY
+
+        print(dangerZone)
+
+        print("The board width is: " + str(boardWidth))
+        print("The board height is " + str(boardHeight))
+
+        if xMove < 0:
+            # then the head is to the left of the food
+            move = (right, yCoord)
+            if move not in dangerZone and right < boardWidth:
+                #print("Moving Right towards food")
+                direction = "right"
+            elif move in dangerZone:
+                print("Moving right into a danger zone")
+        if direction == None and xMove > 0:
+            # then the head is to the right of the food
+            move = (left, yCoord)
+            if move not in dangerZone and left >=0:
+                #print("Moving Left towards food")
+                direction = 'left'
+            elif move in dangerZone:
+                print("Moving left into a danger zone")
+        if direction == None and yMove > 0:
+            # then the head is below the food
+            move = (xCoord, up)
+            if move not in dangerZone and up >= 0:
+                #print("Moving Up towards food")
+                direction = 'up'
+            elif move in dangerZone:
+                print("Moving up into a danger zone")
+        if direction == None and yMove < boardHeight:
+            move = (xCoord, down)
+            #print("At the start of the else case")
+            if move not in dangerZone and down < boardHeight:
+                #print("Moving Down towards food")
+                direction = 'down'
+            elif move in dangerZone:
+                print("Moving down into a danger zone")
+
+
+        if direction == None:
+            print("Print direction is None, finding another safe move")
+            if (left,yCoord) not in dangerZone and left >=0:
+                direction = 'left'
+            elif (right,yCoord) not in dangerZone and right < boardWidth:
+                direction = 'right'
+            elif (xCoord,up) not in dangerZone and up >= 0:
+                direction = 'up'
+            else:
+                direction = "down"    
 
 
 
