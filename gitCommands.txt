@@ -8,5 +8,17 @@ Committing:
 All of the different branches that are available: git branch --all
 
 Switching to another branch: git checkout <branchName>
+                             ex. git checkout master
+                             
+Updating "your" branch with the master branch:                             
+                             git fetch -p (fetches all the changes from the remote repo)
+                             git pull
 
+                             switch back to your branch
+                             git rebase master - rebases everything that was on master
+                             
 Pushing to your local branch: git push -u origin <branchName>
+
+To merge with the master:
+  1. Switch over to the master branch
+  2. git merge <branchName>
