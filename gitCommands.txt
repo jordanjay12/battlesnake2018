@@ -25,3 +25,13 @@ Pushing to your local branch: git push -u origin <branchName>
 To merge with the master:
   1. Switch over to the master branch
   2. git merge <branchName>
+  
+  
+//deploy to heroku servers
+git push heroku master
+
+//open heroku app
+heroku open
+
+//view server logs
+heroku logs --tail
