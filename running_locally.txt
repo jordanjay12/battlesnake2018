@@ -1,0 +1,11 @@
+Running your own game server:
+1. Install docker
+2. Run: docker run -it --rm -p 3000:3000 sendwithus/battlesnake-server
+3. Visit http://localhost:3000
+	Note: Docker runs on a virtual lan so when you add a snake to the game you cannot use localhost, use your internal IP instead
+
+hence the URL of the locally running snake should be something like:
+	http://10.0.2.15:8080/
+
+In another window (not the Docker window we need to be running the server that is handling the post requests):
+	python app/main.py or python2 main.py
