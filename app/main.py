@@ -165,11 +165,6 @@ def move():
     allFood = data['food']['data']
     for food in allFood:
         foodList.append((food['x'], food['y']))
-<<<<<<< HEAD
-
-=======
-   
->>>>>>> 24e51cef5465cb28edc653efc71988ada5da2e9c
     ourSnake = None;
     dangerZone = []
 
