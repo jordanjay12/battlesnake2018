@@ -32,3 +32,11 @@ git rebase master
 
 
 
+To change files in your online repo
+
+git add .
+git commit -m "message"
+git push
+
+
+
