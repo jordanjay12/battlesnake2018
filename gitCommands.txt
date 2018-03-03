@@ -26,6 +26,34 @@ To merge with the master:
   1. Switch over to the master branch
   2. git merge <branchName>
   
+
+To fetch from master and combine with local repo
+
+//switch to master
+git checkout master
+
+//fetches changes from repo
+git fetch -p
+
+//pull from master
+git pull
+
+//switch to branch
+git checkout steph
+
+//rebases master with master
+git rebase master
+
+
+
+To change files in your online repo
+
+git add .
+git commit -m "message"
+git push
+
+
+
   
 //deploy to heroku servers
 git push heroku master
@@ -35,3 +63,4 @@ heroku open
 
 //view server logs
 heroku logs --tail
+
