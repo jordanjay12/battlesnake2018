@@ -5,7 +5,7 @@ import random
 boardWidth = None
 boardHeight = None
 snakeLength = 0
-snakeHealth = 
+snakeHealth = None
 
 # The URL of Xander's snake: https://dwightsnake.herokuapp.com
 
@@ -94,7 +94,7 @@ def move():
     print data
 
     # mySnakeId = "409e5891-9d0a-4bc6-9b66-fb1b2d562762"
-    mySnakeId = "f24ce7a9-56e4-4cef-adb7-4fd65d66ecd9"
+    mySnakeId = "b412f432-45b1-4bb2-88ca-8a2626e2add3"
     foodList = []
     allFood = data['food']['data']
     for food in allFood:
@@ -132,7 +132,7 @@ def move():
     # Check to see what we should be doing based on our health level
     # Remember that our snakes grow out of our tail
     print("Our Snake Health is: " + str(snakeHealth))
-    if snakeHealth > 50:
+    if snakeHealth > 50 and snakeHealth < 95: # for the initial, not sure if we should be using this at the very beginning of the game
         # I need to do more testing on this to see if it will work
         print("Should be trying to find our tail")
         snake = findTail(ourCoordinates)
