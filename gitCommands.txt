@@ -37,10 +37,3 @@ To change files in your online repo
 git add .
 git commit -m "message"
 git push
-
-
-
-To add your account to command line
-
-git config credential.helper store
-
