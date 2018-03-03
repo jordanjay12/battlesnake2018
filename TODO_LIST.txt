@@ -1,0 +1,7 @@
+Starting tomorrow morning:
+
+1. Variables - parse the json object
+2. A* goal to food
+3. No Go
+4. Check length, go offensive
+5. Implement FSM
