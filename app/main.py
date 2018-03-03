@@ -90,7 +90,6 @@ def move():
     global snakeHealth
     data = bottle.request.json
 
-    print data['you']['id']
     # TODO: Do things with data
     # Made some more changes to the python file
     # print "Printing out the contents of data"
