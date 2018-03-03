@@ -5,7 +5,9 @@ import random
 boardWidth = None
 boardHeight = None
 snakeLength = 0
-snakeHealth = 0
+snakeHealth = 
+
+# The URL of Xander's snake: https://dwightsnake.herokuapp.com
 
 def findTail(ourCoordinates):
     # return the location of our tail (x, y)
