@@ -13,13 +13,13 @@ snakeHealth = None
 class PriorityQueue:
     def __init__(self):
         self.elements = []
-    
+
     def empty(self):
         return len(self.elements) == 0
-    
+
     def put(self, item, priority):
         heapq.heappush(self.elements, (priority, item))
-    
+
     def get(self):
         return heapq.heappop(self.elements)[1]
 
@@ -28,14 +28,14 @@ class SquareGrid:
         self.width = width
         self.height = height
         self.walls = []
-    
+
     def in_bounds(self, id):
         (x, y) = id
         return 0 <= x < self.width and 0 <= y < self.height
-    
+
     def passable(self, id):
         return id not in self.walls
-    
+
     def neighbors(self, id):
         (x, y) = id
         results = [(x+1, y), (x, y-1), (x-1, y), (x, y+1)]
@@ -148,11 +148,16 @@ def start():
     }
 
 
+def next_pos(start, came_from, goal):
+    
+    return (0,0)
+
+
 @bottle.post('/move')
 def move():
     global boardWidth
     global boardHeight
-    global snakeLength  
+    global snakeLength
     global snakeHealth
     data = bottle.request.json
 
@@ -168,7 +173,7 @@ def move():
     allFood = data['food']['data']
     for food in allFood:
         foodList.append((food['x'], food['y']))
-   
+
     ourSnake = None;
     dangerZone = []
 
@@ -207,6 +212,15 @@ def move():
     print()
     print("The value of cost_so_far is: ")
     print(cost_so_far)
+
+    #printing start and goal to sort this crap out!
+
+    # print("start")
+    # print(start)
+    # print("goal")
+    # print(goal)
+
+    next_cord = next_pos(start, came_from, goal)
 
     direction = None
 
@@ -337,7 +351,7 @@ def move():
             elif (xCoord,up) not in dangerZone and up >= 0:
                 direction = 'up'
             else:
-                direction = "down"    
+                direction = "down"
 
 
 
