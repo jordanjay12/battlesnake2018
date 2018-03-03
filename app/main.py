@@ -61,7 +61,7 @@ def start():
 
     # we get our Id in the post request that is sent here
 
-    head_url = '%s://%s/static/head.png' % (
+    head_url = './therock.png' % (
         bottle.request.urlparts.scheme,
         bottle.request.urlparts.netloc
     )
