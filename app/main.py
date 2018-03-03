@@ -55,6 +55,7 @@ def start():
     global boardWidth
     global boardHeight
     data = bottle.request.json
+    print data
     game_id = data.get('game_id')
     board_width = data.get('width')
     board_height = data.get('height')
@@ -88,26 +89,23 @@ def move():
     global snakeHealth
     data = bottle.request.json
 
+    print data['you']['id']
     # TODO: Do things with data
     # Made some more changes to the python file
     # print "Printing out the contents of data"
-    #print data
     snakes = data['snakes']['data']
-    #print str(snakes[0]['id'])
-    # mySnakeId = "409e5891-9d0a-4bc6-9b66-fb1b2d562762"
-    mySnakeId = snakes[0]['id']
+    mySnakeId = data['you']['id']
     foodList = []
     allFood = data['food']['data']
     for food in allFood:
         foodList.append((food['x'], food['y']))
-
-   
 
     ourSnake = None;
     dangerZone = []
 
     # Find the ID of our snake
     for snake in snakes:
+        print snake
         snakeCoords = snake['body']['data']
         currentId = snake['id']
         if currentId == mySnakeId:
