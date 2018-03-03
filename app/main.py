@@ -13,13 +13,13 @@ snakeHealth = None
 class PriorityQueue:
     def __init__(self):
         self.elements = []
-    
+
     def empty(self):
         return len(self.elements) == 0
-    
+
     def put(self, item, priority):
         heapq.heappush(self.elements, (priority, item))
-    
+
     def get(self):
         return heapq.heappop(self.elements)[1]
 
@@ -28,14 +28,14 @@ class SquareGrid:
         self.width = width
         self.height = height
         self.walls = []
-    
+
     def in_bounds(self, id):
         (x, y) = id
         return 0 <= x < self.width and 0 <= y < self.height
-    
+
     def passable(self, id):
         return id not in self.walls
-    
+
     def neighbors(self, id):
         (x, y) = id
         results = [(x+1, y), (x, y-1), (x-1, y), (x, y+1)]
@@ -105,7 +105,34 @@ def findFood(foodList, head):
             min = total_distance
             closest = food
     return closest
-    print("Should be finding food")
+
+# Takes grid points and converts them to move instructions
+def coordToDirection(xCoord, yCoord, nextMoveX, nextMoveY):
+    if xCoord - nextMoveX < 0:
+        direction = "right"
+    if xCoord - nextMoveX > 0:
+        direction = "left"
+    # if both of these cases fail, then we need to move in the up down direction
+    if yCoord - nextMoveY < 0:
+        direction = "down"
+    if yCoord - nextMoveY > 0:
+        direction = "up"
+    return direction
+
+def decisionMaker(foodList, graph, start):
+    goal = findFood(foodList, start)
+    destination = goal
+    came_from, cost_so_far = bs_search(graph, start, goal)
+    previousMove = None
+    while start != destination:
+        previousMove = destination
+        destination = came_from[destination]
+
+    nextMoveX = previousMove[0]
+    nextMoveY = previousMove[1]
+
+    direction = coordToDirection(start[0], start[1], nextMoveX, nextMoveY)
+    return direction
 
 
 @bottle.route('/')
@@ -134,10 +161,6 @@ def start():
         bottle.request.urlparts.netloc
     )
 
-    # TODO: Do things with data
-    # There doesn't appear to be that much that is relevant
-    print("In the start method")
-    print(data)
     boardWidth = data['width']
     boardHeight = data['height']
 
@@ -152,13 +175,11 @@ def start():
 def move():
     global boardWidth
     global boardHeight
-    global snakeLength  
+    global snakeLength
     global snakeHealth
     data = bottle.request.json
 
-    # TODO: Do things with data
-    # Made some more changes to the python file
-    # print "Printing out the contents of data"
+    # Makes graph of food and snakes for A*
     snakes = data['snakes']['data']
     mySnakeId = data['you']['id']
     foodList = []
@@ -174,7 +195,6 @@ def move():
         snakeCoords = snake['body']['data']
         currentId = snake['id']
         if currentId == mySnakeId:
-            print("Found our snake")
             ourSnake = snake;
         # Go through the coordinates of each of the snakes: this should really in range(len-1) since the tail will move
         for coordinate in snake['body']['data']:
@@ -185,8 +205,6 @@ def move():
     graph = SquareGrid(boardWidth, boardHeight) # needs the dimensions of the graph
     graph.walls = dangerZone
 
-    print("If I am seeing this, then I think the graph is working as intended")
-
     snakeLength = ourSnake['length']
     snakeHealth = ourSnake['health']
 
@@ -196,182 +214,11 @@ def move():
     xCoord = int(ourCoordinates[0]['x'])
     yCoord = int(ourCoordinates[0]['y'])
 
+    #Set start and goal destiniations for A*
+    #THIS WILL NEED CHANGES FOR ENHANCED BEHAVIOUR
     start = (xCoord, yCoord)
-    goal = findFood(foodList, (xCoord,yCoord))
-    came_from, cost_so_far = bs_search(graph, start, goal)
-    print("The value of head is:", start)
-    print("The value of goal is:", goal)
-    print("The value of came_from is: ")
-    print(came_from)
-    print()
-    print("The value of cost_so_far is: ")
-    print(cost_so_far)
 
-
-    print("Printing out goal")
-    print(goal)
-    print("Printing out what was returned from the key")
-    print(came_from[goal])
-    destination = goal
-    previousMove = None
-    while start != destination:
-        previousMove = destination
-        destination = came_from[destination]
-
-    print("Our next move should be:", previousMove)
-
-    left = xCoord - 1
-    right = xCoord + 1
-    up = yCoord -1 # since the top is 0
-    down = yCoord + 1
-
-    nextMoveX = previousMove[0]
-    nextMoveY = previousMove[1]
-
-    if xCoord - nextMoveX < 0:
-        direction = "right"
-    if xCoord - nextMoveX > 0:
-        direction = "left"
-    # if both of these cases fail, then we need to move in the up down direction
-
-    if yCoord - nextMoveY < 0:
-        direction = "down"
-    if yCoord - nextMoveY > 0:
-        direction = "up"
-
-    '''
-    direction = None
-
-    # Check to see what we should be doing based on our health level
-    # Remember that our snakes grow out of our tail
-    print("Our Snake Health is: " + str(snakeHealth))
-    if snakeHealth > 50 and snakeHealth < 95: # for the initial, not sure if we should be using this at the very beginning of the game
-        # I need to do more testing on this to see if it will work
-        print("Should be trying to find our tail")
-        snake = findTail(ourCoordinates)
-        tailX = snake[0]
-        tailY = snake[1]
-
-        # I can probably modularize this into some other function
-        left = xCoord - 1
-        right = xCoord + 1
-        up = yCoord -1 # since the top is 0
-        down = yCoord + 1
-
-        xMove = xCoord - tailX
-        yMove = yCoord - tailY
-
-        if xMove < 0:
-            # then the head is to the left of the food
-            move = (right, yCoord)
-            if move not in dangerZone and right < boardWidth:
-                print("Moving Right towards food")
-                direction = "right"
-            elif move in dangerZone:
-                print("Moving right into a danger zone")
-        if direction == None and xMove > 0:
-            # then the head is to the right of the food
-            move = (left, yCoord)
-            if move not in dangerZone and left >=0:
-                print("Moving Left towards food")
-                direction = 'left'
-            elif move in dangerZone:
-                print("Moving left into a danger zone")
-        if direction == None and yMove > 0:
-            # then the head is below the food
-            move = (xCoord, up)
-            if move not in dangerZone and up >= 0:
-                print("Moving Up towards food")
-                direction = 'up'
-            elif move in dangerZone:
-                print("Moving up into a danger zone")
-        if direction == None and yMove < boardHeight:
-            move = (xCoord, down)
-            print("At the start of the else case")
-            if move not in dangerZone and down < boardHeight:
-                print("Moving Down towards food")
-                direction = 'down'
-            elif move in dangerZone:
-                print("Moving down into a danger zone")
-
-
-        if direction == None:
-            print("Print direction is None, finding another safe move")
-            if (left,yCoord) not in dangerZone and left >=0:
-                direction = 'left'
-            elif (right,yCoord) not in dangerZone and right < boardWidth:
-                direction = 'right'
-            elif (xCoord,up) not in dangerZone and up >= 0:
-                direction = 'up'
-            else:
-                direction = "down"
-
-    else:
-
-        closestFood = findFood(foodList, (xCoord,yCoord))
-        foodX = closestFood[0]
-        foodY = closestFood[1]
-
-        left = xCoord - 1
-        right = xCoord + 1
-        up = yCoord -1 # since the top is 0
-        down = yCoord + 1
-        move = None;
-        #direction = None
-        xMove = xCoord - foodX
-        yMove = yCoord - foodY
-
-        print(dangerZone)
-
-        print("The board width is: " + str(boardWidth))
-        print("The board height is " + str(boardHeight))
-
-        if xMove < 0:
-            # then the head is to the left of the food
-            move = (right, yCoord)
-            if move not in dangerZone and right < boardWidth:
-                #print("Moving Right towards food")
-                direction = "right"
-            elif move in dangerZone:
-                print("Moving right into a danger zone")
-        if direction == None and xMove > 0:
-            # then the head is to the right of the food
-            move = (left, yCoord)
-            if move not in dangerZone and left >=0:
-                #print("Moving Left towards food")
-                direction = 'left'
-            elif move in dangerZone:
-                print("Moving left into a danger zone")
-        if direction == None and yMove > 0:
-            # then the head is below the food
-            move = (xCoord, up)
-            if move not in dangerZone and up >= 0:
-                #print("Moving Up towards food")
-                direction = 'up'
-            elif move in dangerZone:
-                print("Moving up into a danger zone")
-        if direction == None and yMove < boardHeight:
-            move = (xCoord, down)
-            #print("At the start of the else case")
-            if move not in dangerZone and down < boardHeight:
-                #print("Moving Down towards food")
-                direction = 'down'
-            elif move in dangerZone:
-                print("Moving down into a danger zone")
-
-
-        if direction == None:
-            print("Print direction is None, finding another safe move")
-            if (left,yCoord) not in dangerZone and left >=0:
-                direction = 'left'
-            elif (right,yCoord) not in dangerZone and right < boardWidth:
-                direction = 'right'
-            elif (xCoord,up) not in dangerZone and up >= 0:
-                direction = 'up'
-            else:
-                direction = "down"    
-    '''
-
+    direction = decisionMaker(foodList, graph, start)
 
     # Directions must be one of the following strings
     #directions = ['up', 'down', 'left', 'right']
