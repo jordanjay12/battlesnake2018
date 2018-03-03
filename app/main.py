@@ -119,11 +119,12 @@ def coordToDirection(xCoord, yCoord, nextMoveX, nextMoveY):
         direction = "up"
     return direction
 
-def decisionMaker(foodList, graph, start):
+def decisionMaker(foodList, graph, start, ourCoordinates):
     goal = findFood(foodList, start)
     destination = goal
     came_from, cost_so_far = bs_search(graph, start, goal)
     previousMove = None
+    print(destination)
     while start != destination:
         previousMove = destination
         destination = came_from[destination]
@@ -131,8 +132,33 @@ def decisionMaker(foodList, graph, start):
     nextMoveX = previousMove[0]
     nextMoveY = previousMove[1]
 
-    direction = coordToDirection(start[0], start[1], nextMoveX, nextMoveY)
-    return direction
+    start2 = goal
+    destination2 = findTail(ourCoordinates)
+    came_from2, cost_so_far2 = bs_search(graph, start2, destination2)
+    print(came_from2)
+
+    # our new destination is now the tail
+    previousMove2 = None
+    while start2 != destination2:
+        previousMove2 = destination2
+        destination2 = came_from2[destination2]
+
+    if previousMove != None and previousMove2 != None:
+        # then we can to a piece of food and back to the tail
+        return  coordToDirection(start[0], start[1], nextMoveX, nextMoveY)
+    else:
+        # just try to get back to the tail
+        came_from3, cost_so_far3 = bs_search(graph, start, destination2)
+        previousMove3 = None
+        while start != destination2:
+            previousMove3 = destination2
+            destination2 = came_from3[destination2]
+        # extract the coordinates from destination 3
+        nextMoveX = previousMove3[0]
+        nextMoveY = previousMove3[1]
+        return coordToDirection(start[0], start[1], nextMoveX, nextMoveY)
+    #direction = coordToDirection(start[0], start[1], nextMoveX, nextMoveY)
+    #return direction
 
 
 @bottle.route('/')
@@ -202,8 +228,11 @@ def move():
         if currentId == mySnakeId:
             ourSnake = snake;
         # Go through the coordinates of each of the snakes: this should really in range(len-1) since the tail will move
+        tail = findTail(snake['body']['data'])
         for coordinate in snake['body']['data']:
-            dangerZone.append((coordinate['x'], coordinate['y']))
+            if tail != (coordinate['x'], coordinate['y']):
+                dangerZone.append((coordinate['x'], coordinate['y']))
+
 
 
     # Our danger zone should be complete now - I should be able to create a graph out of it
@@ -223,7 +252,7 @@ def move():
     #THIS WILL NEED CHANGES FOR ENHANCED BEHAVIOUR
     start = (xCoord, yCoord)
 
-    direction = decisionMaker(foodList, graph, start)
+    direction = decisionMaker(foodList, graph, start, ourCoordinates)
 
     # Directions must be one of the following strings
     #directions = ['up', 'down', 'left', 'right']
@@ -231,7 +260,7 @@ def move():
     #print direction
     return {
         'move': direction,
-        'taunt': 'Grind hard, shine hard'
+        'taunt': 'battlesnake-python!'
     }
 
 
