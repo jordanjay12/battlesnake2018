@@ -119,14 +119,35 @@ def coordToDirection(xCoord, yCoord, nextMoveX, nextMoveY):
         direction = "up"
     return direction
 
-def decisionMaker(foodList, graph, start):
+def decisionMaker(foodList, graph, start, dangerZone, x, y):
     goal = findFood(foodList, start)
     destination = goal
     came_from, cost_so_far = bs_search(graph, start, goal)
     previousMove = None
     while start != destination:
         previousMove = destination
-        destination = came_from[destination]
+        try :
+            destination = came_from[destination]
+        except KeyError, e:
+            return None
+        
+
+    #while destination is None:
+            # if i not in dangerZone:
+            #     came_from, cost_so_far = bs_search(graph, start, (i[0],i[1]))
+            #     previousMove = None
+            #     while start != destination:
+            #         previousMove = destination
+            #         destination = came_from[destination]
+    if destination is None:   
+        if ((x+1)%boardWidth,y) not in dangerZone:
+            destination = (x+1,y)
+        elif ((x-1)%boardWidth,y) not in dangerZone:
+            destination = (x-1,y)
+        elif (x,(y-1)%boardHeight) not in dangerZone:
+            destination = (x,y-1)
+        elif (x, (y+1)%boardHeight) not in dangerZone:
+            destination = (x,y+1)   
 
     nextMoveX = previousMove[0]
     nextMoveY = previousMove[1]
@@ -223,7 +244,24 @@ def move():
     #THIS WILL NEED CHANGES FOR ENHANCED BEHAVIOUR
     start = (xCoord, yCoord)
 
-    direction = decisionMaker(foodList, graph, start)
+    direction = decisionMaker(foodList, graph, start, dangerZone, xCoord, yCoord)
+
+    if direction is None:
+        left = xCoord -1
+        right = xCoord + 1
+        up = yCoord -1
+        down = yCoord + 1
+        # xMove = xCoord - foodX
+        # yMove = yCoord - foodY
+
+        if(left,yCoord) not in dangerZone and left >=0:
+            direction = "left"
+        elif(right, yCoord) not in dangerZone and right < boardWidth:
+            direction = "right"
+        elif(xCoord, up) not in dangerZone and up >= 0:
+            direction = "up"
+        else:
+            direction = "down"
 
     # Directions must be one of the following strings
     #directions = ['up', 'down', 'left', 'right']
